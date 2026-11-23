@@ -27,6 +27,3 @@ A deep learning computer vision project that classifies `28x28` grayscale handwr
 ## How to Run
 1. Open `Task 3 Handwritten Character Recognition.ipynb` in **Jupyter Notebook**, **Google Colab**, or **VS Code** with `tensorflow` installed.
 2. Run all cells sequentially from top to bottom (the notebook loads `tensorflow.keras.datasets.mnist` and trains the CNN from scratch).
-```[cite: 8]
-
-لو حابة نضيف أي أقسام تانية زي `requirements.txt` أو نعدّل أي جزئية في أي واحد منهم قوليلي.
