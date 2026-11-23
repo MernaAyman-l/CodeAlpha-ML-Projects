@@ -1,33 +1,69 @@
 # Heart Disease Prediction from Medical Data
 
-A supervised machine learning classification project that predicts heart disease presence from clinical and diagnostic patient attributes using the UCI Cleveland Heart Disease dataset (`297` cleaned samples and `13` features from `processed.cleveland.data` and supporting files under `heart+disease/`) inside `Disease Prediciton.ipynb`.
+An educational supervised-learning project that compares classification models on the UCI Cleveland Heart Disease dataset. The notebook uses 13 clinical attributes to predict the dataset's binary heart-disease label.
 
-## Project Structure & Data Files
-- `Disease Prediciton.ipynb`: End-to-end Jupyter notebook covering dataset loading, missing-value handling (`?` to `NaN` and row removal), binary target conversion, exploratory statistics, stratified train/test splitting (`80/20`, `60` test samples), feature standardization (`StandardScaler`), multi-model training and evaluation, diagnostic visualizations, sample predictions, and summary reporting.
-- `heart+disease/`: Local UCI Heart Disease archive directory containing `processed.cleveland.data`, `cleveland.data`, `hungarian.data`, `switzerland.data`, `long-beach-va.data`, `heart-disease.names`, and reference/cost files.
+> **Important:** This is an academic machine-learning exercise, not a medical device or diagnostic tool. Its predictions must not be used for clinical decisions.
 
-## Dataset Features & Target
-- **Clinical & Diagnostic Features (13):** `age`, `sex`, `cp` (chest pain type), `trestbps` (resting blood pressure), `chol` (serum cholesterol), `fbs` (fasting blood sugar), `restecg` (resting electrocardiographic results), `thalach` (maximum heart rate achieved), `exang` (exercise-induced angina), `oldpeak` (ST depression), `slope` (slope of peak exercise ST segment), `ca` (number of major vessels colored by fluoroscopy), and `thal` (thalassemia).
-- **Binary Target (`target`):** Raw multi-level target values (`> 0`) are converted into a binary classification target (`0` = No Disease, `1` = Disease).
+## Project Files
 
-## Detailed Workflow
-1. **Loading & Cleaning:** Reads the 14-column Cleveland dataset (treating `?` as missing values), inspects initial shape and missing value counts, drops incomplete rows (`df.dropna()`) leaving `297` records, and binarizes `target`.
-2. **Exploratory Analysis & Splitting:** Reviews sample rows and descriptive statistics, separates features (`X`, `13` columns) and target (`y`), and performs an `80/20` stratified split (`random_state=42`).
-3. **Feature Scaling:** Standardizes features using `StandardScaler` (`fit_transform` on `X_train` and `transform` on `X_test`).
-4. **Multi-Model Training & Comparison:** Trains `Logistic Regression`, `Random Forest` (`n_estimators=100`, `random_state=42`), `SVM` (`probability=True`, `random_state=42`), and `XGBoost` (`XGBClassifier`, `random_state=42`), recording `accuracy` and `ROC-AUC` for each classifier and selecting the top model by accuracy.
-5. **Visualizations & Sample Inference:** Plots the best model's confusion matrix, ROC curve, feature importance or model accuracy comparison, and actual vs. predicted points, then demonstrates per-sample predictions and predicted probabilities on test instances.
+| File | Description |
+| --- | --- |
+| `Disease Prediciton.ipynb` | Notebook for loading, preprocessing, training, evaluation, and visualisation |
+| `heart+disease/` | Local copy of the Cleveland dataset and related UCI reference files |
 
-## Model Performance Summary
-- **Logistic Regression:** `Accuracy = 0.8333`, `AUC = 0.9498`
-- **Random Forest (Top Accuracy):** `Accuracy = 0.8667`, `AUC = 0.9414`
-- **SVM:** `Accuracy = 0.8500`, `AUC = 0.9542`
-- **XGBoost:** `Accuracy = 0.8667`, `AUC = 0.8917`
+## Workflow
 
-## Tools & Libraries
-- **Python**
-- **Data & Visualization:** `pandas`, `numpy`, `matplotlib`, `seaborn`
-- **Machine Learning:** `scikit-learn` (`LogisticRegression`, `RandomForestClassifier`, `SVC`, `StandardScaler`, `train_test_split`, `accuracy_score`, `classification_report`, `confusion_matrix`, `roc_auc_score`, `roc_curve`) and `xgboost` (`XGBClassifier`)
+1. Load the Cleveland dataset and treat `?` as missing values.
+2. Remove incomplete rows and convert the original target to a binary label.
+3. Explore the data and split it into stratified training and test sets.
+4. Fit a `StandardScaler` on the training data and transform both splits.
+5. Train Logistic Regression, Random Forest, SVM, and XGBoost classifiers.
+6. Compare accuracy and ROC-AUC, then inspect the selected model's classification report, confusion matrix, and ROC curve.
 
-## How to Run
-1. Open `Disease Prediciton.ipynb` in **Jupyter Notebook**, **Google Colab**, or **VS Code** with `xgboost` installed alongside `scikit-learn`, `pandas`, `numpy`, `matplotlib`, and `seaborn`.
-2. Run all cells sequentially from top to bottom (update the dataset source to `heart+disease/processed.cleveland.data` if running in an offline environment).
+## Dataset
+
+The notebook currently downloads `processed.cleveland.data` from the UCI Machine Learning Repository when it runs. A local copy is also included under `heart+disease/`.
+
+For an offline run, change the dataset-loading path in the notebook to:
+
+```python
+df = pd.read_csv(
+    "heart+disease/processed.cleveland.data",
+    names=column_names,
+    na_values="?"
+)
+```
+
+After removing rows with missing values, the notebook works with 297 records and 13 input features.
+
+## Technologies
+
+- Python
+- Pandas and NumPy
+- Matplotlib and Seaborn
+- Scikit-learn
+- XGBoost
+- Jupyter Notebook
+
+## Run Locally
+
+Install the dependencies:
+
+```bash
+python -m pip install pandas numpy matplotlib seaborn scikit-learn xgboost jupyter
+```
+
+Launch Jupyter:
+
+```bash
+jupyter notebook
+```
+
+Open `Disease Prediciton.ipynb` and run the cells in order. An internet connection is required with the notebook's current UCI download URL; use the local path above for offline execution.
+
+## Limitations
+
+- The dataset is small and historical.
+- Model results depend on the train/test split and software versions.
+- The project does not include external clinical validation.
+- It is intended for learning classification workflows, not for diagnosing or treating disease.
