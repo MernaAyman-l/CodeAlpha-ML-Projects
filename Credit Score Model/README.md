@@ -1,33 +1,68 @@
-# Heart Disease Prediction from Medical Data
+# Credit Scoring Classification
 
-A supervised machine learning classification project that predicts heart disease presence from clinical and diagnostic patient attributes using the UCI Cleveland Heart Disease dataset (`297` cleaned samples and `13` features from `processed.cleveland.data` and supporting files under `heart+disease/`) inside `Disease Prediciton.ipynb`.
+An educational machine-learning project that combines customer application details with historical credit-record data to classify customers into two groups based on their recorded payment history.
 
-## Project Structure & Data Files
-- `Disease Prediciton.ipynb`: End-to-end Jupyter notebook covering dataset loading, missing-value handling (`?` to `NaN` and row removal), binary target conversion, exploratory statistics, stratified train/test splitting (`80/20`, `60` test samples), feature standardization (`StandardScaler`), multi-model training and evaluation, diagnostic visualizations, sample predictions, and summary reporting.
-- `heart+disease/`: Local UCI Heart Disease archive directory containing `processed.cleveland.data`, `cleveland.data`, `hungarian.data`, `switzerland.data`, `long-beach-va.data`, `heart-disease.names`, and reference/cost files.
+## Project Files
 
-## Dataset Features & Target
-- **Clinical & Diagnostic Features (13):** `age`, `sex`, `cp` (chest pain type), `trestbps` (resting blood pressure), `chol` (serum cholesterol), `fbs` (fasting blood sugar), `restecg` (resting electrocardiographic results), `thalach` (maximum heart rate achieved), `exang` (exercise-induced angina), `oldpeak` (ST depression), `slope` (slope of peak exercise ST segment), `ca` (number of major vessels colored by fluoroscopy), and `thal` (thalassemia).
-- **Binary Target (`target`):** Raw multi-level target values (`> 0`) are converted into a binary classification target (`0` = No Disease, `1` = Disease).
+| File | Description |
+| --- | --- |
+| `Task1 Credit Score Model.ipynb` | Notebook for data preparation, exploratory analysis, model training, evaluation, and exporting results |
+| `application_record.csv` | Customer application attributes |
+| `credit_record.csv` | Monthly credit-history status records |
+| `credit_scoring_predictions.csv` | Previously exported predictions; regenerate after rerunning the updated notebook |
+| `model_comparison.csv` | Previously exported model comparison; regenerate after rerunning |
+| `feature_importance.csv` | Previously exported feature importance; regenerate after rerunning |
 
-## Detailed Workflow
-1. **Loading & Cleaning:** Reads the 14-column Cleveland dataset (treating `?` as missing values), inspects initial shape and missing value counts, drops incomplete rows (`df.dropna()`) leaving `297` records, and binarizes `target`.
-2. **Exploratory Analysis & Splitting:** Reviews sample rows and descriptive statistics, separates features (`X`, `13` columns) and target (`y`), and performs an `80/20` stratified split (`random_state=42`).
-3. **Feature Scaling:** Standardizes features using `StandardScaler` (`fit_transform` on `X_train` and `transform` on `X_test`).
-4. **Multi-Model Training & Comparison:** Trains `Logistic Regression`, `Random Forest` (`n_estimators=100`, `random_state=42`), `SVM` (`probability=True`, `random_state=42`), and `XGBoost` (`XGBClassifier`, `random_state=42`), recording `accuracy` and `ROC-AUC` for each classifier and selecting the top model by accuracy.
-5. **Visualizations & Sample Inference:** Plots the best model's confusion matrix, ROC curve, feature importance or model accuracy comparison, and actual vs. predicted points, then demonstrates per-sample predictions and predicted probabilities on test instances.
+## Workflow
 
-## Model Performance Summary
-- **Logistic Regression:** `Accuracy = 0.8333`, `AUC = 0.9498`
-- **Random Forest (Top Accuracy):** `Accuracy = 0.8667`, `AUC = 0.9414`
-- **SVM:** `Accuracy = 0.8500`, `AUC = 0.9542`
-- **XGBoost:** `Accuracy = 0.8667`, `AUC = 0.8917`
+1. Load and inspect the application and credit-history datasets.
+2. Derive one credit-history target per customer.
+3. Merge the target with application attributes.
+4. Explore the resulting data and prepare numerical and categorical features.
+5. Split the data into stratified training and test sets.
+6. Train Logistic Regression, Decision Tree, and Random Forest classifiers.
+7. Compare precision, recall, F1-score, and ROC-AUC; inspect the confusion matrix and feature importance.
+8. Export predictions and evaluation summaries to CSV files.
 
-## Tools & Libraries
-- **Python**
-- **Data & Visualization:** `pandas`, `numpy`, `matplotlib`, `seaborn`
-- **Machine Learning:** `scikit-learn` (`LogisticRegression`, `RandomForestClassifier`, `SVC`, `StandardScaler`, `train_test_split`, `accuracy_score`, `classification_report`, `confusion_matrix`, `roc_auc_score`, `roc_curve`) and `xgboost` (`XGBClassifier`)
+## Target Definition
 
-## How to Run
-1. Open `Disease Prediciton.ipynb` in **Jupyter Notebook**, **Google Colab**, or **VS Code** with `xgboost` installed alongside `scikit-learn`, `pandas`, `numpy`, `matplotlib`, and `seaborn`.
-2. Run all cells sequentially from top to bottom (update the dataset source to `heart+disease/processed.cleveland.data` if running in an offline environment).
+The notebook maps monthly credit statuses to a delinquency severity:
+
+- `C`: account paid
+- `X`: no loan for the month
+- `0`: 1–29 days overdue
+- `1`–`5`: progressively longer overdue periods, beginning at 30–59 days
+
+For this educational binary target, `TARGET = 1` means no recorded delay of 30 days or more, while `TARGET = 0` means at least one recorded delay of 30 days or more. The notebook now uses the **maximum numeric delinquency severity per customer**; it no longer relies on alphabetical string ordering.
+
+This is a simplified project label, not a bank-approved credit-risk definition. It does not establish creditworthiness and must not be used to make real lending decisions.
+
+## Technologies
+
+- Python
+- Pandas and NumPy
+- Matplotlib and Seaborn
+- Scikit-learn
+- Jupyter Notebook
+
+## Run Locally
+
+From this directory, install the dependencies:
+
+```bash
+python -m pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+```
+
+Launch Jupyter:
+
+```bash
+jupyter notebook
+```
+
+Open `Task1 Credit Score Model.ipynb` and run the cells in order. Both CSV input files are included in this directory.
+
+## Important Evaluation Note
+
+The previous notebook outputs were cleared after correcting the target-generation logic. **The model metrics and exported result files must be regenerated by running the updated notebook.** Do not quote the old near-perfect precision/recall figures: the old target-generation method produced an extremely imbalanced label distribution and those metrics were not a reliable indication of model quality.
+
+Further work should include reviewing class imbalance, comparing class-weighted or resampling approaches on training data only, checking for leakage, and evaluating the model with per-class metrics and a confusion matrix.
